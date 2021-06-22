@@ -22,6 +22,19 @@ function shell (command, ...args) {
   }
 }
 
+function direction_alt (direction) {
+  switch(direction) {
+    case "east":
+      return "right"
+    case "west":
+      return "left"
+    case "south":
+      return "down"
+    case "north":
+      return "up"
+  }
+}
+
 function direction_reverse (direction) {
   switch(direction) {
     case "east":
@@ -32,19 +45,6 @@ function direction_reverse (direction) {
       return "north"
     case "north":
       return "south"
-  }
-}
-
-function workspace_next (direction) {
-  switch(direction) {
-    case "east":
-      return "next"
-    case "west":
-      return "prev"
-    case "south":
-      return "next"
-    case "north":
-      return "prev"
   }
 }
 
@@ -61,11 +61,28 @@ function workspace_type (direction) {
   }
 }
 
-function workspace_reverse(workspace) {
-  switch(workspace) {
-    case "next":
+function workspace_next (direction) {
+  switch(direction) {
+    case "east":
+      return "next"
+    case "west":
       return "prev"
-    case "prev":
+    case "south":
+      return "next"
+    case "north":
+      return "prev"
+  }
+}
+
+function workspace_reverse(direction) {
+  switch(direction) {
+    case "east":
+      return "prev"
+      case "west":
+      return "next"
+    case "south":
+      return "prev"
+      case "north":
       return "next"
   }
 }
@@ -83,47 +100,69 @@ function position_adjacent (direction) {
   }
 }
 
-function position_reverse (position) {
-  switch(position) {
-    case "first":
-      return "last"
-    case "last":
-      return "first"
-  }
-}
-
-function get_info (direction) {
-  const dir_rev = direction_reverse(direction)
-  const wrk_nxt = workspace_next(direction)
-  const wrk_typ = workspace_type(direction)
-  const wrk_rev = workspace_reverse(wrk_nxt)
-  const pos_adj = position_adjacent(direction)
-  const pos_rev = position_reverse(pos_adj)
-
-  return {
-    dir_rev,
-    wrk_nxt,
-    wrk_typ,
-    wrk_rev,
-    pos_adj,
-    pos_rev
-  }
-}
-
 function yabai_message(type, action, direction) {
   return shell('yabai', '-m', type, `--${action}`, direction)
 }
 
-function yabai_focus(direction, info) {
-  let f = yabai_message('window', 'focus', direction)
-  if (f.status !== 0) {
-    f = yabai_message(info.wrk_typ, 'focus', info.wrk_nxt)
+function yabai_focus(direction) {
+  const focus_adjacent_window = yabai_message('window', 'focus', direction)
 
-    if (f.status !== 0) {
-      yabai_message(info.wrk_typ, 'focus', info.wrk_rev)
+  if (focus_adjacent_window.status !== 0) {
+    const focus_next_workspace = yabai_message(workspace_type(direction), 'focus', workspace_next(direction))
+      
+    if (focus_next_workspace.status !== 0) {
+      yabai_message('display', 'focus', workspace_reverse(direction))
     }
+    
+    yabai_message('window', 'focus', position_adjacent(direction))
+  }
+}
 
-    yabai_message('window', 'focus', info.pos_adj)
+function yabai_warp(direction) {
+  const warp_adjacent_window = yabai_message('window', 'warp', direction)
+  if (warp_adjacent_window.status !== 0) {
+    if (direction === 'east' || direction === 'west') {
+      const wrk_nxt = workspace_next(direction)
+      const wrk_typ = workspace_type(direction)
+
+      const warp_next_workspace = yabai_message('window', wrk_typ, wrk_nxt)
+      
+      if (warp_next_workspace.status !== 0) {
+        const wrk_rev = workspace_reverse(direction)
+        yabai_message('window', wrk_typ, wrk_rev)
+        yabai_message(wrk_typ, 'focus', wrk_rev)
+      } else {
+        yabai_message(wrk_typ, 'focus', wrk_nxt)
+      }
+
+      yabai_message('window', 'warp', position_adjacent(direction))
+    }
+  }
+}
+
+function yabai_resize(direction) {
+  const amount = 100
+
+  if (direction === 'west') {
+    const r = yabai_message('window', 'resize', `left:-${amount}:0`)
+    if (r.status !== 0) {
+      const r = yabai_message('window', 'resize', `right:-${amount}:0`)
+    }
+  } else if (direction === 'east') {
+    const r = yabai_message('window', 'resize', `left:${amount}:0`)
+    if (r.status !== 0) {
+      const r = yabai_message('window', 'resize', `right:${amount}:0`)
+    }
+  } else if (direction === 'north') {
+    const r = yabai_message('window', 'resize', `bottom:0:-${amount}`)
+    if (r.status !== 0) {
+      const r = yabai_message('window', 'resize', `top:0:-${amount}`)
+    }
+  } else if (direction === 'south') {
+    const r = yabai_message('window', 'resize', `bottom:0:${amount}`)
+    if (r.status !== 0) {
+      const r = yabai_message('window', 'resize', `top:0:${amount}`)
+    }
   }
 }
 
@@ -131,15 +170,18 @@ async function main () {
   const args = process.argv
   const action = args[2]
   const direction = args[3]
-  const info = get_info(direction)
 
   switch (action) {
     case 'focus':
-      yabai_focus(direction, info)
+      yabai_focus(direction)
+      break
+    case 'warp':
+      yabai_warp(direction)
+      break
+    case 'resize':
+      yabai_resize(direction)
       break
     default:
-      // TODO:
-      console.warn('warn about no valid action being passed')
       break
   }
 }

@@ -28,7 +28,6 @@ alias lsip="curl http://ipecho.net/plain; echo"
 alias route='netstat -rn'
 alias vi='vim'
 alias vim='nvim'
-alias dockerMachineStart='(docker-machine ls | grep default | grep -vi "running" && docker-machine start default) ; eval `docker-machine env default`'
 
 #█▓▒░  GIT
 function gcm() { 
