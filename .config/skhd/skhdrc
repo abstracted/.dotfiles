@@ -14,10 +14,10 @@ ctrl - down : $HOME/scripts/yabaictl focus south
 ctrl - left : $HOME/scripts/yabaictl focus west
 ctrl - right : $HOME/scripts/yabaictl focus east
 
-ctrl + shift - up : $HOME/scripts/yabaictl warp north
-ctrl + shift - down : $HOME/scripts/yabaictl warp south
-ctrl + shift - left : $HOME/scripts/yabaictl warp west
-ctrl + shift - right : $HOME/scripts/yabaictl warp east
+ctrl + shift - up : $HOME/scripts/yabaictl move north
+ctrl + shift - down : $HOME/scripts/yabaictl move south
+ctrl + shift - left : $HOME/scripts/yabaictl move west
+ctrl + shift - right : $HOME/scripts/yabaictl move east
 
 ctrl + cmd - up : $HOME/scripts/yabaictl resize north
 ctrl + cmd - down : $HOME/scripts/yabaictl resize south
