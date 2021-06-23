@@ -62,6 +62,15 @@ function display_next (direction) {
   }
 }
 
+function workspace_is_empty () {
+  return JSON.parse(yabai_message('query', 'windows', '--space').stdout)
+    .filter(({ floating, visible, minimized }) => 
+      floating !== 1 && 
+      visible !== 0 &&
+      minimized !== 1
+    ).length === 0
+}
+
 function position_adjacent (direction) {
   switch(direction) {
     case "east":
@@ -93,9 +102,10 @@ function yabai_focus(direction) {
       yabai_message('space', 'focus', index)
     }
 
-    const position = position_adjacent(direction)
-
-    yabai_message('window', 'focus', position)
+    if (!workspace_is_empty()) {
+      const position = position_adjacent(direction)
+      yabai_message('window', 'focus', position)
+    }
   }
 }
 
@@ -117,8 +127,7 @@ function yabai_move(direction) {
     }
 
     const position = position_adjacent(direction)
-
-    yabai_message('window', 'warp', position)
+    yabai_message('window', 'focus', position)
   }
 }
 
