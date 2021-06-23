@@ -22,68 +22,43 @@ function shell (command, ...args) {
   }
 }
 
-function direction_alt (direction) {
-  switch(direction) {
-    case "east":
-      return "right"
-    case "west":
-      return "left"
-    case "south":
-      return "down"
-    case "north":
-      return "up"
+function space_next (direction) {
+  const spaces = JSON.parse(yabai_message('query', 'spaces', '--display').stdout)
+  const { index } = JSON.parse(yabai_message('query', 'spaces', '--space').stdout)
+
+  const index_next = direction === 'north'
+    ? index + 1
+    : index - 1
+  
+  const index_first = spaces[0].index
+  const index_last = spaces[spaces.length - 1].index
+
+  if (index_next > index_last) {
+    return index_first
+  } else if (index_next < index_first) {
+    return index_last
+  } else {
+    return index_next
   }
 }
 
-function direction_reverse (direction) {
-  switch(direction) {
-    case "east":
-      return "west"
-    case "west":
-      return "east"
-    case "south":
-      return "north"
-    case "north":
-      return "south"
-  }
-}
+function display_next (direction) {
+  const displays = JSON.parse(yabai_message('query', 'displays', '').stdout)
+  const { index } = JSON.parse(yabai_message('query', 'displays', '--display').stdout)
 
-function workspace_type (direction) {
-  switch(direction) {
-    case "east":
-      return "display"
-    case "west":
-      return "display"
-    case "south":
-      return "space"
-    case "north":
-      return "space"
-  }
-}
+  const index_next = direction === 'east'
+    ? index + 1
+    : index - 1
+  
+  const index_first = displays[0].index
+  const index_last = displays[displays.length - 1].index
 
-function workspace_next (direction) {
-  switch(direction) {
-    case "east":
-      return "next"
-    case "west":
-      return "prev"
-    case "south":
-      return "next"
-    case "north":
-      return "prev"
-  }
-}
-
-function workspace_reverse(direction) {
-  switch(direction) {
-    case "east":
-      return "prev"
-      case "west":
-      return "next"
-    case "south":
-      return "prev"
-      case "north":
-      return "next"
+  if (index_next > index_last) {
+    return index_first
+  } else if (index_next < index_first) {
+    return index_last
+  } else {
+    return index_next
   }
 }
 
@@ -100,50 +75,50 @@ function position_adjacent (direction) {
   }
 }
 
-function yabai_message(type, action, direction) {
-  return shell('yabai', '-m', type, `--${action}`, direction)
+function yabai_message(type, action, subaction) {
+  return shell('yabai', '-m', type, `--${action}`, subaction)
 }
 
 function yabai_focus(direction) {
   const focus_adjacent_window = yabai_message('window', 'focus', direction)
 
   if (focus_adjacent_window.status !== 0) {
-    const wrk_nxt = workspace_next(direction)
-    const wrk_typ = workspace_type(direction)
-    const pos_adj = position_adjacent(direction)
+    if (direction === 'east' || direction === 'west') {
+      const index = display_next(direction)
 
-    const focus_next_workspace = yabai_message(wrk_typ, 'focus', wrk_nxt)
-      
-    if (focus_next_workspace.status !== 0) {
-      const wrk_rev = workspace_reverse(direction)
+      yabai_message('display', 'focus', index)
+    } else if (direction === 'north' || direction === 'south') {
+      const index = space_next(direction)
 
-      yabai_message(wrk_typ, 'focus', wrk_rev)
+      yabai_message('space', 'focus', index)
     }
-    
-    yabai_message('window', 'focus', pos_adj)
+
+    const position = position_adjacent(direction)
+
+    yabai_message('window', 'focus', position)
   }
 }
 
-function yabai_warp(direction) {
-  const warp_adjacent_window = yabai_message('window', 'warp', direction)
+function yabai_move(direction) {
+  const warp_adjacent_window = yabai_message('window', 'swap', direction)
 
   if (warp_adjacent_window.status !== 0) {
-    const wrk_nxt = workspace_next(direction)
-    const wrk_typ = workspace_type(direction)
-    const pos_adj = position_adjacent(direction)
-
-    const warp_next_workspace = yabai_message('window', wrk_typ, wrk_nxt)
-    
-    if (warp_next_workspace.status !== 0) {
-      const wrk_rev = workspace_reverse(direction)
-
-      yabai_message('window', wrk_typ, wrk_rev)
-      yabai_message(wrk_typ, 'focus', wrk_rev)
-    } else {
-      yabai_message(wrk_typ, 'focus', wrk_nxt)
+    if (direction === 'east' || direction === 'west') {
+      const index = display_next(direction)
+      
+      yabai_message('window', 'display', index)
+      yabai_message('display', 'focus', index)
+      
+    } else if (direction === 'north' || direction === 'south') {
+      const index = space_next(direction)
+      
+      yabai_message('window', 'space', index)
+      yabai_message('space', 'focus', index)
     }
 
-    yabai_message('window', 'warp', pos_adj)
+    const position = position_adjacent(direction)
+
+    yabai_message('window', 'warp', position)
   }
 }
 
@@ -186,8 +161,8 @@ async function main () {
     case 'focus':
       yabai_focus(direction)  
       break
-    case 'warp':
-      yabai_warp(direction)
+    case 'move':
+      yabai_move(direction)
       break
     case 'resize':
       yabai_resize(direction)
