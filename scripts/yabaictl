@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 const system = require('child_process')
 
+const RESIZE_AMOUNT = 100
+const SPACES_PER_DISPLAY = 5
+
 /**
 * Function to issue bash commands, returns the stdout.
 * @param command
@@ -22,9 +25,23 @@ function shell (command, ...args) {
   }
 }
 
-function space_next (direction) {
-  const spaces = JSON.parse(yabai_message('query', 'spaces', '--display').stdout)
+function yabai_message(type, action, subaction = '', modifier = '') {
+  // console.log('yabai', '-m', type, `--${action}`, subaction, modifier)
+  return shell('yabai', '-m', type, `--${action}`, subaction, modifier)
+}
+
+function spaces_on_display (index = '') {
+  return JSON.parse(yabai_message('query', 'spaces', '--display', index).stdout)
+}
+
+function space_current_index () {
   const { index } = JSON.parse(yabai_message('query', 'spaces', '--space').stdout)
+  return index
+}
+
+function space_next (direction) {
+  const spaces = spaces_on_display()
+  const index = space_current_index()
 
   const index_next = direction === 'north'
     ? index + 1
@@ -42,9 +59,18 @@ function space_next (direction) {
   }
 }
 
-function display_next (direction) {
-  const displays = JSON.parse(yabai_message('query', 'displays', '').stdout)
+function displays_on_system () {
+  return JSON.parse(yabai_message('query', 'displays', '').stdout)
+}
+
+function display_current_index () {
   const { index } = JSON.parse(yabai_message('query', 'displays', '--display').stdout)
+  return index
+}
+
+function display_next (direction) {
+  const displays = displays_on_system()
+  const index = display_current_index()
 
   const index_next = direction === 'east'
     ? index + 1
@@ -82,10 +108,6 @@ function position_adjacent (direction) {
     case "north":
       return "last"
   }
-}
-
-function yabai_message(type, action, subaction) {
-  return shell('yabai', '-m', type, `--${action}`, subaction)
 }
 
 function yabai_focus(direction) {
@@ -132,33 +154,61 @@ function yabai_move(direction) {
 }
 
 function yabai_resize(direction) {
-  const amount = 100
-
   if (direction === 'west') {
-    const resize_west = yabai_message('window', 'resize', `left:-${amount}:0`)
+    const resize_west = yabai_message('window', 'resize', `left:-${RESIZE_AMOUNT}:0`)
 
     if (resize_west.status !== 0) {
-      yabai_message('window', 'resize', `right:-${amount}:0`)
+      yabai_message('window', 'resize', `right:-${RESIZE_AMOUNT}:0`)
     }
   } else if (direction === 'east') {
-    const resize_east = yabai_message('window', 'resize', `left:${amount}:0`)
+    const resize_east = yabai_message('window', 'resize', `left:${RESIZE_AMOUNT}:0`)
 
     if (resize_east.status !== 0) {
-      yabai_message('window', 'resize', `right:${amount}:0`)
+      yabai_message('window', 'resize', `right:${RESIZE_AMOUNT}:0`)
     }
   } else if (direction === 'north') {
-    const resize_north = yabai_message('window', 'resize', `bottom:0:-${amount}`)
+    const resize_north = yabai_message('window', 'resize', `bottom:0:-${RESIZE_AMOUNT}`)
 
     if (resize_north.status !== 0) {
-      yabai_message('window', 'resize', `top:0:-${amount}`)
+      yabai_message('window', 'resize', `top:0:-${RESIZE_AMOUNT}`)
     }
   } else if (direction === 'south') {
-    const resize_south = yabai_message('window', 'resize', `bottom:0:${amount}`)
+    const resize_south = yabai_message('window', 'resize', `bottom:0:${RESIZE_AMOUNT}`)
 
     if (resize_south.status !== 0) {
-      yabai_message('window', 'resize', `top:0:${amount}`)
+      yabai_message('window', 'resize', `top:0:${RESIZE_AMOUNT}`)
     }
   }
+}
+
+function yabai_create_workspaces() {
+  const display_initial = display_current_index()
+  const space_initial = space_current_index()
+
+  const displays = displays_on_system()
+
+  for (let i = 0; i < displays.length; i++) {
+    const di = i + 1
+
+    yabai_message('display', 'focus', di)
+
+    const spaces = spaces_on_display()
+
+    for (let k = 0; k < SPACES_PER_DISPLAY; k++) {
+      if (k > spaces.length) {
+        yabai_message('space', 'create')
+      }
+      
+      // const si = i 
+      //   ? SPACES_PER_DISPLAY + k + 1
+      //   : k + 1
+
+      // shell('yabai', '-m', 'space', si, '--label', ``)
+    }
+  }
+  
+  yabai_message('display', 'focus', display_initial)
+  yabai_message('space', 'focus', space_initial)
 }
 
 async function main () {
@@ -175,6 +225,9 @@ async function main () {
       break
     case 'resize':
       yabai_resize(direction)
+      break
+    case 'create_workspaces':
+      yabai_create_workspaces()
       break
   }
 }
