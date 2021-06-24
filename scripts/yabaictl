@@ -39,6 +39,11 @@ function space_current_index () {
   return index
 }
 
+function window_current_id () {
+  const { id } = JSON.parse(yabai_message('query', 'windows', '--window').stdout)
+  return id
+}
+
 function space_next (direction) {
   const spaces = spaces_on_display()
   const index = space_current_index()
@@ -133,8 +138,10 @@ function yabai_focus(direction) {
 
 function yabai_move(direction) {
   const warp_adjacent_window = yabai_message('window', 'swap', direction)
-
+  
   if (warp_adjacent_window.status !== 0) {
+    const id = window_current_id()
+
     if (direction === 'east' || direction === 'west') {
       const index = display_next(direction)
       
@@ -149,7 +156,8 @@ function yabai_move(direction) {
     }
 
     const position = position_adjacent(direction)
-    yabai_message('window', 'focus', position)
+    yabai_message('window', 'warp', position)
+    yabai_message('window', 'focus', id)
   }
 }
 
