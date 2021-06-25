@@ -51,8 +51,28 @@ yabai -m config focus_follows_mouse          off
 $HOME/scripts/yabaictl create_workspaces
 
 # rules
-
-
+yabai -m rule --add app="^Adobe Creative Cloud$" manage=off
+yabai -m rule --add app="^Backblaze$" manage=off
+yabai -m rule --add app="^balenaEtcher$" manage=off
+yabai -m rule --add app="^Calculator$" manage=off
+yabai -m rule --add app="^Contexts$" manage=off
+yabai -m rule --add app="^Dash$" manage=off
+yabai -m rule --add app="^Flux$" manage=off
+yabai -m rule --add app="^Focus$" manage=off
+yabai -m rule --add app="^HandBrake$" manage=off
+yabai -m rule --add app="^Karabiner-Elements$" manage=off
+yabai -m rule --add app="^Little Snitch$" manage=off
+yabai -m rule --add app="^nextcloud$" manage=off
+yabai -m rule --add app="^QuickTime Player$" manage=off
+yabai -m rule --add app="^Stickies$" manage=off
 yabai -m rule --add app="^System Preferences$" manage=off
+yabai -m rule --add app="^TeamViewer$" manage=off
+yabai -m rule --add app="^The Unarchiver$" manage=off
+yabai -m rule --add app="^VLC$" manage=off
+
+yabai -m rule --add app="Slack$" space=10
+yabai -m rule --add app="Microsoft Teams$" space=10
+yabai -m rule --add app="Calender$" space=9
+yabai -m rule --add app="Mail$" space=9
 
 echo "yabai configuration loaded.."
