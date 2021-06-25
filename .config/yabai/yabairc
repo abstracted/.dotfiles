@@ -4,18 +4,21 @@ sudo yabai --load-sa
 
 # colours
 source ~/.cache/wal/colors.sh
-CBACK=$(echo $background | sed 's/#//')
-CFORE=$(echo $foreground | sed 's/#//')
-CACTV=$(echo $color3 | sed 's/#//')
-CNORM=$(echo $color1 | sed 's/#//')
-CINSE=$(echo $foreground | sed 's/#//')
+CB=$(echo $background | sed 's/#//')
+CF=$(echo $foreground | sed 's/#//')
+C1=$(echo $color1 | sed 's/#//')
+C2=$(echo $color2 | sed 's/#//')
+C3=$(echo $color3 | sed 's/#//')
+C4=$(echo $color4 | sed 's/#//')
+C5=$(echo $color5 | sed 's/#//')
+C6=$(echo $color6 | sed 's/#//')
 
 # border
-yabai -m config window_border                off
-yabai -m config window_border_width          4
-yabai -m config active_window_border_color   0xff$CACTV
-yabai -m config normal_window_border_color   0xff$CNORM
-yabai -m config insert_window_border_color   0xff$CINSE
+yabai -m config window_border                on
+yabai -m config window_border_width          8
+yabai -m config active_window_border_color   0xff$C1
+yabai -m config normal_window_border_color   0xff$CB
+yabai -m config insert_window_border_color   0xff$CF
 
 # gaps
 yabai -m config layout                       bsp
