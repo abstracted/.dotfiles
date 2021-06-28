@@ -14,7 +14,7 @@ C5=$(echo $color5 | sed 's/#//')
 C6=$(echo $color6 | sed 's/#//')
 
 # border
-yabai -m config window_border                on
+yabai -m config window_border                off
 yabai -m config window_border_width          8
 yabai -m config active_window_border_color   0xff$C1
 yabai -m config normal_window_border_color   0xff$CB
@@ -70,9 +70,12 @@ yabai -m rule --add app="^TeamViewer$" manage=off
 yabai -m rule --add app="^The Unarchiver$" manage=off
 yabai -m rule --add app="^VLC$" manage=off
 
+yabai -m rule --add app="^Typora$" manage=on
+yabai -m rule --add app="^Typora$" sticky=off
+
 yabai -m rule --add app="Slack$" space=10
 yabai -m rule --add app="Microsoft Teams$" space=10
-yabai -m rule --add app="Calender$" space=9
+yabai -m rule --add app="Calendar$" space=9
 yabai -m rule --add app="Mail$" space=9
 
 echo "yabai configuration loaded.."
