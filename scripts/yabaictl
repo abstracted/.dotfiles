@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const system = require('child_process')
+const fs = require('fs')
 
 const RESIZE_AMOUNT = 100
 const SPACES_PER_DISPLAY = 5
@@ -202,7 +203,7 @@ function yabai_create_workspaces() {
 
     const spaces = spaces_on_display()
 
-    for (let k = 0; k < SPACES_PER_DISPLAY; k++) {
+    for (let k = 0; k <= SPACES_PER_DISPLAY; k++) {
       if (k > spaces.length) {
         yabai_message('space', 'create')
       }
@@ -223,6 +224,7 @@ async function main () {
   const args = process.argv
   const action = args[2]
   const direction = args[3]
+  fs.writeFileSync(`${__dirname}/log.txt`, JSON.stringify({ action, direction }))
 
   switch (action) {
     case 'focus':
