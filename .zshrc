@@ -28,6 +28,7 @@ alias lsip="curl http://ipecho.net/plain; echo"
 alias route='netstat -rn'
 alias vi='vim'
 alias vim='nvim'
+alias htop='zenith'
 
 #█▓▒░  GIT
 function gcm() { 
