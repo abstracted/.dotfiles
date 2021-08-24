@@ -1,0 +1,151 @@
+[$Version]
+update_info=filepicker.upd:filepicker-remove-old-previews-entry,fonts_global.upd:Fonts_Global,fonts_global_toolbar.upd:Fonts_Global_Toolbar,icons_remove_effects.upd:IconsRemoveEffects,kwin.upd:animation-speed,style_widgetstyle_default_breeze.upd:StyleWidgetStyleDefaultBreeze
+
+[ColorEffects:Disabled]
+ChangeSelectionColor=
+Color=56,56,56
+ColorAmount=0
+ColorEffect=0
+ContrastAmount=0.65000000000000002
+ContrastEffect=1
+Enable=
+IntensityAmount=0.10000000000000001
+IntensityEffect=2
+
+[ColorEffects:Inactive]
+ChangeSelectionColor=true
+Color=112,111,110
+ColorAmount=0.025000000000000001
+ColorEffect=2
+ContrastAmount=0.10000000000000001
+ContrastEffect=2
+Enable=false
+IntensityAmount=0
+IntensityEffect=0
+
+[Colors:Button]
+BackgroundAlternate=64,69,82
+BackgroundNormal=66,66,66
+DecorationFocus=81,123,189
+DecorationHover=86,128,194
+ForegroundActive=61,174,233
+ForegroundInactive=89,89,89
+ForegroundLink=41,128,185
+ForegroundNegative=152,57,70
+ForegroundNeutral=246,116,0
+ForegroundNormal=194,194,194
+ForegroundPositive=39,174,96
+ForegroundVisited=82,148,226
+
+[Colors:Selection]
+BackgroundAlternate=29,153,243
+BackgroundNormal=59,86,137
+DecorationFocus=81,123,189
+DecorationHover=86,128,194
+ForegroundActive=252,252,252
+ForegroundInactive=194,194,194
+ForegroundLink=253,188,75
+ForegroundNegative=152,57,70
+ForegroundNeutral=246,116,0
+ForegroundNormal=255,255,255
+ForegroundPositive=39,174,96
+ForegroundVisited=189,195,199
+
+[Colors:Tooltip]
+BackgroundAlternate=47,52,63
+BackgroundNormal=29,29,29
+DecorationFocus=81,123,189
+DecorationHover=86,128,194
+ForegroundActive=61,174,233
+ForegroundInactive=89,89,89
+ForegroundLink=41,128,185
+ForegroundNegative=152,57,70
+ForegroundNeutral=246,116,0
+ForegroundNormal=194,194,194
+ForegroundPositive=39,174,96
+ForegroundVisited=82,148,226
+
+[Colors:View]
+BackgroundAlternate=64,69,82
+BackgroundNormal=35,35,35
+DecorationFocus=81,123,189
+DecorationHover=86,128,194
+ForegroundActive=61,174,233
+ForegroundInactive=89,89,89
+ForegroundLink=41,128,185
+ForegroundNegative=152,57,70
+ForegroundNeutral=246,116,0
+ForegroundNormal=194,194,194
+ForegroundPositive=39,174,96
+ForegroundVisited=82,148,226
+
+[Colors:Window]
+BackgroundAlternate=47,52,63
+BackgroundNormal=56,56,56
+DecorationFocus=81,123,189
+DecorationHover=86,128,194
+ForegroundActive=61,174,233
+ForegroundInactive=89,89,89
+ForegroundLink=41,128,185
+ForegroundNegative=152,57,70
+ForegroundNeutral=246,116,0
+ForegroundNormal=194,194,194
+ForegroundPositive=39,174,96
+ForegroundVisited=82,148,226
+
+[General]
+BrowserApplication=brave-browser-beta.desktop
+ColorScheme=Blender2
+Name=Breeze Light
+XftHintStyle=hintnone
+XftSubPixel=vbgr
+fixed=FantasqueSansMono Nerd Font,10,-1,5,50,0,0,0,0,0
+font=Inter Medium,10,-1,5,57,0,0,0,0,0,Medium
+menuFont=Inter Medium,10,-1,5,57,0,0,0,0,0,Medium
+shadeSortColumn=true
+smallestReadableFont=Inter Medium,8,-1,5,57,0,0,0,0,0,Medium
+toolBarFont=Inter Medium,10,-1,5,57,0,0,0,0,0,Medium
+widgetStyle=Breeze
+
+[Icons]
+Theme=Papirus-Dark
+
+[KDE]
+ColorScheme=BreezeLight
+contrast=4
+widgetStyle=Breeze
+
+[KFileDialog Settings]
+Allow Expansion=false
+Automatically select filename extension=true
+Breadcrumb Navigation=true
+Decoration position=2
+LocationCombo Completionmode=5
+PathCombo Completionmode=5
+Show Bookmarks=false
+Show Full Path=false
+Show Inline Previews=true
+Show Preview=false
+Show Speedbar=true
+Show hidden files=false
+Sort by=Name
+Sort directories first=true
+Sort reversed=false
+Speedbar Width=138
+View Style=Simple
+
+[KScreen]
+ScaleFactor=1.0625
+ScreenScaleFactors=DisplayPort-0=1.0625;DisplayPort-1=1.0625;DisplayPort-2=1.0625;HDMI-A-0=1.0625;DVI-D-0=1.0625;
+
+[KShortcutsDialog Settings]
+Dialog Size=600,480
+
+[WM]
+activeBackground=56,56,56
+activeBlend=56,56,56
+activeFont=Inter Medium,10,-1,5,57,0,0,0,0,0,Medium
+activeForeground=255,255,255
+inactiveBackground=66,66,66
+inactiveBlend=66,66,66
+inactiveForeground=194,194,194
